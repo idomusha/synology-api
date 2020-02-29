@@ -1,6 +1,7 @@
 {
-    "name": "@ltaoo/synology",
-    "version": "1.4.1",
+    "name": "@idomusha/synology",
+    "version": "1.5.0",
+    "private": false,
     "description": "A simple wrapper for the Synology FileStation API",
     "keywords": [
         "synology",
@@ -10,7 +11,7 @@
     ],
     "repository": {
         "type": "git",
-        "url": "git://github.com/ltaoo/synology-api.git"
+        "url": "git://github.com/idomusha/synology-api.git"
     },
     "license": "MIT",
     "dependencies": {
