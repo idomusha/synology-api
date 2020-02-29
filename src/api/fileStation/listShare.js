@@ -16,13 +16,13 @@ const request = require('request');
  * real_path,owner,time,perm,mount_point_type,sync_share,volume_status
  * @return {Promise}
  */
-function list(params) {
+function listShare(params) {
     const api = 'SYNO.FileStation.List';
     const path = this.COMMON_PATH;
 
     const queryObj = {
         api,
-        method: 'list',
+        method: 'list_share',
         version: 2,
         ...params,
     };
@@ -32,4 +32,4 @@ function list(params) {
     ));
 }
 
-module.exports = list;
+module.exports = listShare;
