@@ -50,17 +50,24 @@ class Synology {
 
     /* eslint-disable class-methods-use-this */
     /**
-     * 共用的请求后回调函数
+     * 共用的请求后回调函数 (axios版本)
+     * @param {Object} response - axios response object
+     * @param {Object} response.data - response body
      */
-    callback(resolve, reject, err, response, body) {
-        if (err) {
-            logger.error(err);
-            reject(err);
-            return;
-        }
+    handleResponse(resolve, reject, response) {
+        const body = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
         const content = appendErrorMessage(body);
         logger.info('request success', content);
         resolve(content, response);
+    }
+
+    /**
+     * 共用的错误处理函数 (axios版本)
+     * @param {Error} err - axios error object
+     */
+    handleError(reject, err) {
+        logger.error(err);
+        reject(err);
     }
 }
 
