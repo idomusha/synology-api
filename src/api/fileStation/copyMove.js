@@ -8,12 +8,12 @@ const Wait = require('../wait-promise');
 
 
 /**
- * @param {string} path - 要移动的文件或文件夹，用 , 分隔多个
- * @param {string} dest_folder_path - 目标路径
- * @param {boolean} [overwrite] - 是否覆盖，默认存在重名文件则报错，false 会跳过重名文件
- * @param {boolean} [remove_src=false] - 默认 copy，如果传 true 则表示是 move
+ * @param {string} path - File or folder to move, use comma to separate multiple
+ * @param {string} dest_folder_path - Destination path
+ * @param {boolean} [overwrite] - Whether to overwrite, defaults to error on duplicate, false skips duplicates
+ * @param {boolean} [remove_src=false] - Default is copy, pass true for move
  * @param {boolean} [accurate_progress=true]
- * @param {string} [search_taskid] - 配合 search 使用
+ * @param {string} [search_taskid] - Used with search
  */
 function start({
     path,
@@ -95,7 +95,7 @@ function stop({ taskid }) {
 }
 
 /**
- * 和 search 类似，由于是耗时任务所以有 start 开始，status 查询状态 和 end 结束
+ * Similar to search, since it's a long-running task it has start, status to query progress, and stop to end
  */
 function copyMove(params) {
     let taskId = '';

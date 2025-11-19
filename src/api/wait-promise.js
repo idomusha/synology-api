@@ -1,9 +1,9 @@
 function noop() {}
 /**
- * @param {number} interval - 定时器间隔
- * @param {number} beforeTime - 隔多少时间后开始轮询
+ * @param {number} interval - Timer interval
+ * @param {number} beforeTime - Time to wait before starting polling
  * @param {number} afterTime
- * @param {number} limit - 轮询次数？限制，超出则轮询视为失败
+ * @param {number} limit - Polling limit, exceeding this treats polling as failed
  */
 function Wait(interval, beforeTime, afterTime = 0, limit) {
     this.every(interval, limit);
@@ -13,7 +13,7 @@ function Wait(interval, beforeTime, afterTime = 0, limit) {
 
 Wait.prototype = {
     /**
-     * 设定过期时间
+     * Set expiration time
      * @param {number} time
      */
     before(time) {
@@ -26,7 +26,7 @@ Wait.prototype = {
         return this;
     },
     /**
-     * 设定 afterTime
+     * Set afterTime
      * @param {number} time
      */
     after(time) {
@@ -34,8 +34,8 @@ Wait.prototype = {
         return this;
     },
     /**
-     * 设定定时器间隔
-     * @param {number} interval - 定时器间隔
+     * Set timer interval
+     * @param {number} interval - Timer interval
      * @param {number} limit
      */
     every(interval, limit) {
@@ -46,7 +46,7 @@ Wait.prototype = {
         return this;
     },
     /**
-     * 设定 limit
+     * Set limit
      * @param {number} limit
      */
     limit(limit) {
@@ -75,7 +75,7 @@ Wait.prototype = {
         });
     },
     /**
-     * 要用来判断的代码，即轮询部分，返回 promise
+     * Code to evaluate, the polling part, returns a promise
      * @param {function} cond
      */
     until(cond) {
@@ -98,14 +98,14 @@ Wait.prototype = {
                     .catch(() => f())
                     .finally(() => {
                         if (Date.now() >= self.expires || called >= self.limit) {
-                            reject(new Error('超出次数或时间限制'));
+                            reject(new Error('Exceeded count or time limit'));
                         }
                     });
             }
             f();
 
             // setTimeout(() => {
-            //     // 每隔一定时间调用一次 f
+            //     // Call f at regular intervals
             //     timer = setInterval(f, interval);
             // }, afterTime);
         }));

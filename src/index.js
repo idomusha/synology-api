@@ -18,7 +18,7 @@ class Synology {
     }
 
     /**
-     * 使用新的配置项覆盖已有的
+     * Override existing options with new ones
      * @param {Object} options
      */
     update(options) {
@@ -29,9 +29,9 @@ class Synology {
     }
 
     /**
-     * 组装请求地址
-     * @param {string} path - 请求的 api 地址
-     * @param {Object} params - 查询参数
+     * Build the request URL
+     * @param {string} path - API endpoint path
+     * @param {Object} params - Query parameters
      * @return {URL}
      */
     stringify({ path, params }) {
@@ -50,7 +50,7 @@ class Synology {
 
     /* eslint-disable class-methods-use-this */
     /**
-     * 共用的请求后回调函数 (axios版本)
+     * Common response handler (axios version)
      * @param {Object} response - axios response object
      * @param {Object} response.data - response body
      */
@@ -62,7 +62,7 @@ class Synology {
     }
 
     /**
-     * 共用的错误处理函数 (axios版本)
+     * Common error handler (axios version)
      * @param {Error} err - axios error object
      */
     handleError(reject, err) {

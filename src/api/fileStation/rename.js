@@ -5,10 +5,10 @@ const axios = require('axios');
 
 /**
  * Rename a file/folder
- * @param {string} path - 要重命名的完整文件或者文件夹路径，可用 , 分隔多个
- * @param {string} name - 文件或文件夹新名字，不需要包含路径，可用 , 分隔多个，与 path 是一一对应关系
+ * @param {string} path - Full path of file or folder to rename, use comma to separate multiple
+ * @param {string} name - New name for file or folder, don't include path, use comma to separate multiple (corresponds to path)
  * @param {string} [additional]
- * @param {string} [search_taskid] - 配合 search 重命名搜索到的文件或文件夹
+ * @param {string} [search_taskid] - Used with search to rename found files or folders
  */
 function rename(params) {
     const api = 'SYNO.FileStation.Rename';
