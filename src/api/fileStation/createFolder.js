@@ -5,11 +5,11 @@ const axios = require('axios');
 
 /**
  * Create folders
- * @param {string} folder_path - 新建文件夹所在的文件夹
- * 如果 force_parent = true 且该文件夹不存在就会新建该文件夹
- * @paran {string} name - 新文件夹的名字
+ * @param {string} folder_path - Parent folder for the new folder
+ * If force_parent = true and this folder doesn't exist, it will be created
+ * @param {string} name - Name of the new folder
  * @param {boolean} [force_parent=false]
- * @param {string} additional - 返回结果要包含的额外信息
+ * @param {string} additional - Additional info to include in result
  */
 function createFolder(params) {
     const api = 'SYNO.FileStation.CreateFolder';

@@ -7,7 +7,7 @@ const axios = require('axios');
 const FormData = require('form-data');
 
 /**
- * 获取上传文件的文件名
+ * Get the filename for upload
  * @param {*} p
  * @param {*} defaultName
  */
@@ -18,7 +18,7 @@ function basename(p, defaultName) {
     if (p.slice(0, 4) === 'http') {
         const paths = p.split('/');
         const filename = paths[paths.length - 1];
-        // 如果没有文件名，应该随机生成一个，但是后缀又不知道是什么
+        // If there's no filename, generate a random one, but we don't know the extension
         if (!filename.includes('.')) {
             return Date.now().toString();
         }
@@ -28,12 +28,12 @@ function basename(p, defaultName) {
 }
 
 /**
- * 上传文件
+ * Upload file
  * @param {UploadOptions} params
- * @param {string} params.path - 要上传到的目录
- * @param {string} params.file - 要上传的文件路径
- * @param {string} [name] - 文件名，如果网络地址最后没有后缀，那 name 就是必选项
- * @param {string} [params.overwrite=false] - 文件已存在是否覆盖
+ * @param {string} params.path - Target directory for upload
+ * @param {string} params.file - File path to upload
+ * @param {string} [name] - Filename, required if URL doesn't have an extension
+ * @param {string} [params.overwrite=false] - Whether to overwrite if file exists
  * @return {Promise}
  */
 function upload(params) {

@@ -4,8 +4,8 @@
 const axios = require('axios');
 
 /**
- * @param {string} path - 要删除的文件或文件夹，用 , 分隔多个
- * @param {boolean} recursive - 如果设为 false，当要删除的文件夹下存在文件时会删除失败
+ * @param {string} path - File or folder to delete, use comma to separate multiple
+ * @param {boolean} recursive - If false, deletion fails when folder contains files
  */
 function del({
     path,

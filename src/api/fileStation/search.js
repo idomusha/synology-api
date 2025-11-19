@@ -7,9 +7,9 @@ const axios = require('axios');
  * Search files according to given criteria.
  * @example ?api=SYNO.FileStation.Search&version=2&method=start&folder_path=%22%2Fvideo%22&pattern=1
  * @param {string} folder_path
- * @param {boolean} [recursive=true] - 是否递归查询
- * @param {string} [search_type=simple] - 文档中没有，实际请求中有
- * @param {boolean} [search_content=false] - 文档中没有，实际请求中有
+ * @param {boolean} [recursive=true] - Whether to search recursively
+ * @param {string} [search_type=simple] - Not in docs, but used in actual requests
+ * @param {boolean} [search_content=false] - Not in docs, but used in actual requests
  * @param {pattern} [pattern]
  * @param {pattern} [extension]
  * @param {string} [fileType=all] file|dir|all
@@ -51,11 +51,11 @@ function start(params) {
  * @param {number} [limit=0]
  * @param {string} [sort_by=name] - name|user|group|mtime|atime|ctime|crtime|posix
  * @param {string} [sort_direction=asc] asc|desc
- * @param {pattern} [pattern] - 实际上 start 接收了这个参数，这里就不需要了
+ * @param {pattern} [pattern] - Actually start accepts this param, so it's not needed here
  * @param {string} [fileType=all] file|dir|all
  * @param {string} [additional=undefined]
  * real_path,owner,time,perm,mount_point_type,sync_share,volume_status
- * 返回结果要包含的额外信息，比如是否要绝对路径 real_path 等
+ * Additional info to include in results, e.g. real_path for absolute path
  * @return {Promise}
  */
 function list(params) {
@@ -128,15 +128,16 @@ function clean(params) {
 }
 
 /**
- * 查询是很特殊的接口，分为 start、list、stop 和 clean 四个接口
- * 在 start 开启查询后，要多次调用 list 才能返回全部的信息，确认查询完毕后主动 stop 并 clean
- * 如果只暴露给用户 search，自己处理多次调用 list，那用户等待的时间可能很长
- * 还是需要用户主动多次调用才比较好，但这样带来的问题是又需要用户主动 stop
- * @TODO 暂时只能查询到一部分结果
- * @param {string} folder_path - 要搜索的目录
- * @param {string} pattern - 搜索的文件名
- * @param {number} limit - 数量
- * @param {string} [additional] - 包含的额外信息
+ * Search is a special API, consisting of four endpoints: start, list, stop, and clean.
+ * After starting a search with start, list must be called multiple times to get all results.
+ * After confirming search is complete, call stop and clean.
+ * If we only expose search to users and handle multiple list calls internally, wait time could be long.
+ * It's better to let users call list multiple times, but this requires them to call stop manually.
+ * @TODO Currently only returns partial results
+ * @param {string} folder_path - Directory to search
+ * @param {string} pattern - Filename pattern to search
+ * @param {number} limit - Number of results
+ * @param {string} [additional] - Additional info to include
  */
 function search({
     /* eslint-disable camelcase */
@@ -169,7 +170,7 @@ function search({
                     offset,
                     limit,
                     additional,
-                    // 文档中是 fileType，但实际请求是 filetype
+                    // Docs say fileType, but actual request uses filetype
                     filetype: fileType,
                 };
                 return list.call(instance, listParams);
