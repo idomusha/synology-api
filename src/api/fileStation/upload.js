@@ -3,7 +3,8 @@
  */
 const fs = require('fs');
 const path = require('path');
-const request = require('request');
+const axios = require('axios');
+const FormData = require('form-data');
 
 /**
  * 获取上传文件的文件名
@@ -47,24 +48,46 @@ function upload(params) {
 
     const url = this.stringify({ path: reqPath, params: queryObj });
     logger.info(url);
+
     return new Promise(async (resolve, reject) => {
-        const r = request({ url }, this.callback.bind(this, resolve, reject));
-        const form = r.form();
-        const { file, name, ...restParams } = params;
-        Object.keys(restParams).forEach((key) => {
-            const value = restParams[key];
-            form.append(key, value);
-        });
-        // 文件需要特殊处理
-        const filename = basename(file, name);
-        let value = null;
-        // 如果是网络地址
-        if (file.slice(0, 4) === 'http') {
-            value = request({ url: file });
-        } else {
-            value = fs.createReadStream(file);
+        try {
+            const form = new FormData();
+            const { file, name, ...restParams } = params;
+
+            // Append all other params to form
+            Object.keys(restParams).forEach((key) => {
+                const value = restParams[key];
+                form.append(key, String(value));
+            });
+
+            // Handle file specially
+            const filename = basename(file, name);
+            let fileStream;
+
+            // If it's a URL, fetch it first
+            if (file.slice(0, 4) === 'http') {
+                const response = await axios.get(file, { responseType: 'stream' });
+                fileStream = response.data;
+            } else {
+                fileStream = fs.createReadStream(file);
+            }
+
+            form.append('file', fileStream, { filename });
+
+            // Make the upload request
+            const response = await axios.post(url, form, {
+                headers: {
+                    ...form.getHeaders(),
+                },
+                maxContentLength: Infinity,
+                maxBodyLength: Infinity,
+            });
+
+            const body = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
+            this.handleResponse(resolve, reject, { data: body });
+        } catch (err) {
+            this.handleError(reject, err);
         }
-        form.append('file', value, filename ? { filename } : undefined);
     });
 }
 

@@ -2,7 +2,7 @@
  * @doc https://cndl.synology.cn/download/Document/DeveloperGuide/Synology_File_Station_API_Guide.pdf#page=63&zoom=100,0,174
  */
 /* eslint-disable camelcase */
-const request = require('request');
+const axios = require('axios');
 
 const Wait = require('../wait-promise');
 
@@ -40,7 +40,9 @@ function start({
     const url = this.stringify({ path: reqPath, params: queryObj });
     logger.info(url);
     return new Promise((resolve, reject) => {
-        request({ url }, this.callback.bind(this, resolve, reject));
+        axios.get(url)
+            .then(this.handleResponse.bind(this, resolve, reject))
+            .catch(this.handleError.bind(this, reject));
     });
 }
 
@@ -57,19 +59,19 @@ function status({ taskid }) {
     const url = this.stringify({ path, params: queryObj });
     logger.info(url);
     return new Promise((resolve, reject) => {
-        request({ url }, (err, response, body) => {
-            if (err) {
+        axios.get(url)
+            .then((response) => {
+                const content = response.data;
+                const { finished } = content.data;
+                if (finished) {
+                    resolve(content);
+                } else {
+                    reject(content);
+                }
+            })
+            .catch((err) => {
                 reject(err);
-                return;
-            }
-            const content = JSON.parse(body);
-            const { finished } = content.data;
-            if (finished) {
-                resolve(content);
-            } else {
-                reject(content);
-            }
-        });
+            });
     });
 }
 
@@ -86,7 +88,9 @@ function stop({ taskid }) {
     const url = this.stringify({ path, params: queryObj });
     logger.info(url);
     return new Promise((resolve, reject) => {
-        request({ url }, this.callback.bind(this, resolve, reject));
+        axios.get(url)
+            .then(this.handleResponse.bind(this, resolve, reject))
+            .catch(this.handleError.bind(this, reject));
     });
 }
 

@@ -1,7 +1,7 @@
 /**
  * @doc https://cndl.synology.cn/download/Document/DeveloperGuide/Synology_File_Station_API_Guide.pdf#page=63&zoom=100,0,174
  */
-const request = require('request');
+const axios = require('axios');
 /**
  * Provide File Station information
  * @return {Promise}
@@ -17,7 +17,9 @@ function info() {
     const url = this.stringify({ path, params: queryObj });
     logger.info(url);
     return new Promise((resolve, reject) => {
-        request({ url }, this.callback.bind(this, resolve, reject));
+        axios.get(url)
+            .then(this.handleResponse.bind(this, resolve, reject))
+            .catch(this.handleError.bind(this, reject));
     });
 }
 

@@ -4,7 +4,7 @@
  */
 const pathUtils = require('path');
 const fs = require('fs');
-const request = require('request');
+const axios = require('axios');
 
 /**
  * 返回最后一个文件路径
@@ -47,14 +47,28 @@ function download({
         filename = `${filename}.zip`;
     }
     const wholePath = pathUtils.join(to, filename);
+
     return new Promise((resolve, reject) => {
-        request({ url }, (err, response, body) => {
-            if (err) {
+        axios({
+            method: 'get',
+            url,
+            responseType: 'stream',
+        })
+            .then((response) => {
+                const writer = fs.createWriteStream(wholePath);
+                response.data.pipe(writer);
+
+                writer.on('finish', () => {
+                    resolve(wholePath, response);
+                });
+
+                writer.on('error', (err) => {
+                    reject(err);
+                });
+            })
+            .catch((err) => {
                 reject(err);
-                return;
-            }
-            resolve(body, response);
-        }).pipe(fs.createWriteStream(wholePath));
+            });
     });
 }
 
