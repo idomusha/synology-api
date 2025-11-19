@@ -1,18 +1,36 @@
 # synology-api
 
-Synology api 的一层封装，方便调用，其他类似的库都不支持上传文件，google 后找到了正确的上传方式。
+A wrapper for the Synology FileStation API, making it easy to call. Unlike other similar libraries, this one supports file uploads.
+
+## Fork Notice
+
+This is a fork of [ltaoo/synology-api](https://github.com/ltaoo/synology-api).
+
+### Changes from upstream:
+
+#### v1.5.0
+- Fixed list method
+
+#### v1.6.0
+- Replaced `request` with `axios` to fix critical security vulnerabilities
+- Translated all comments to English
+- Updated dependencies to latest secure versions
+
+## Installation
+
+```bash
+npm install @idomusha/synology
+```
 
 ## Usage
 
-```bash
-yarn add @idomusha/synology-api
-```
-
 ### Init
 
--   internal IP
+- Internal IP
 
 ```js
+const Synology = require('@idomusha/synology');
+
 const synology = new Synology({
     protocol: 'http',
     host: '192.168.1.4',
@@ -20,7 +38,7 @@ const synology = new Synology({
 });
 ```
 
--   external URL
+- External URL
 
 ```js
 const synology = new Synology({
@@ -47,31 +65,19 @@ async function init() {
 init();
 ```
 
-以下所有方法必须在登录成功后使用。
+All methods below must be used after successful login.
 
 ### Upload
 
 ```js
-async function init() {
-    try {
-        await synology.Auth.auth({
-            username: USERNAME,
-            password: PASSWORD
-        });
-        await synology.FileStation.upload({
-            path: '/home',
-            file: path.join(__dirname, './example.jpg')
-            // 支持下载网络图片，如果网络地址最后不带后缀，必须添加 name 参数
-            // file: 'http://imgpolitics.gmw.cn/attachement/jpg/site2/20190428/f44d305ea48e1e2f58565d.jpg',
-            // name: 'xxx.jpg',
-        });
-        //
-    } catch (err) {
-        console.error(err);
-    }
-}
-
-init();
+await synology.FileStation.upload({
+    path: '/home',
+    file: path.join(__dirname, './example.jpg')
+    // Supports downloading network images
+    // If the URL doesn't have an extension, you must add the name parameter
+    // file: 'http://example.com/image.jpg',
+    // name: 'xxx.jpg',
+});
 ```
 
 ### Download
@@ -86,12 +92,10 @@ await synology.FileStation.download({
 
 ### Search
 
-```javascript
-// search
+```js
 const data = await synology.FileStation.search({
     folder_path: '/home',
-    // 包含的文件名
-    pattern: '6x'
+    pattern: '6x' // filename pattern to search
 });
 console.log(data);
 ```
@@ -114,7 +118,7 @@ await synology.FileStation.rename({
 });
 ```
 
-### MoveOrCopy
+### Move or Copy
 
 ```js
 await synology.FileStation.copyMove({
@@ -131,9 +135,9 @@ await synology.FileStation.delete({
 });
 ```
 
-## example
+## Example
 
-在项目根目录增加 `.env` 文件，并填写如下内容：
+Create a `.env` file in the project root with the following content:
 
 ```
 ACCOUNT = your account username
@@ -143,18 +147,21 @@ PORT = 5000
 NODE_ENV = dev
 ```
 
-然后执行 `node example/index.js`，终端会显示当前请求的地址与结果。
-如果出现 `auth success {"data":{"sid":"jiEIqBgVWZuCU1840QMRH4C3AV"},"success":true}` 这种数据就表示登录成功。
+Then run `node example/index.js`. The terminal will display the current request URL and result.
+If you see `auth success {"data":{"sid":"jiEIqBgVWZuCU1840QMRH4C3AV"},"success":true}`, login was successful.
 
 ## TODO
 
-[√] 使用自定义日志打印替代 console.log
+- [x] Use custom logging instead of console.log
 
-### download
+### Download
 
-[]文件不存在时返回正确的错误信息
+- [ ] Return proper error message when file doesn't exist
 
-## 参考
+## References
 
--   [How can I upload a file to a Synology diskstation with PHP
-    ](https://stackoverflow.com/questions/45137195/how-can-i-upload-a-file-to-a-synology-diskstation-with-php/48637467#48637467)
+- [How can I upload a file to a Synology diskstation with PHP](https://stackoverflow.com/questions/45137195/how-can-i-upload-a-file-to-a-synology-diskstation-with-php/48637467#48637467)
+
+## License
+
+MIT
